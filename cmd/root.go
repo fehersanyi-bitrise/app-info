@@ -17,8 +17,10 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 
+	"github.com/bitrise-io/go-utils/log"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -38,9 +40,41 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(file)
-		fmt.Println(path)
+		fmt.Print("APP: ")
+		log.Infof("%s", file)
+		fmt.Print("PATH: ")
+		log.Infof("%s", path)
+		fmt.Println()
+		getAPK(args[0])
 	},
+}
+
+func getAPK(path string) {
+	runCmd := []string{"aapt", "dump", "badging"}
+	log.Printf("Running command: ")
+	log.Donef("%s %s", strings.Join(runCmd, " "), path)
+	command, err := exec.Command("aapt", "dump", "badging", path).Output()
+	if err != nil {
+		fmt.Printf("failed to run command %s", err)
+	}
+
+	info := strings.Split(string(command), "\n")
+
+	appInfo := make(map[string]string)
+	for i := 0; i < len(info); i++ {
+		if strings.Contains(info[i], "package") {
+			appInfo["packageName"] = strings.Split(info[i], "'")[1]
+			appInfo["cersionCode"] = strings.Split(info[i], "'")[3]
+			appInfo["versionName"] = strings.Split(info[i], "'")[5]
+		} else if strings.Contains(info[i], "application-icon") {
+			appInfo["icon"] = strings.Split(info[i], "'")[1]
+		}
+	}
+
+	log.Printf("Package name: %s", appInfo["packageName"])
+	log.Printf("Version Code: %s", appInfo["cersionCode"])
+	log.Printf("Version Name: %s", appInfo["versionName"])
+	log.Printf("Path to icon: %s", appInfo["icon"])
 }
 
 func processPath(args []string) (string, string, error) {
