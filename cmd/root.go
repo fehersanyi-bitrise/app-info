@@ -34,17 +34,24 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) > 0 {
-			path := args[0]
-			apkPath := strings.Split(path, "/")
-			fileName := apkPath[len(apkPath)-1]
-			pathToUse := strings.Join(apkPath[:len(apkPath)-1], "/")
-			fmt.Println(fileName)
-			fmt.Println(pathToUse)
-		} else {
-			fmt.Println("Please provide a path to an apk or an ipa file.")
+		file, path, err := processPath(args)
+		if err != nil {
+			fmt.Println(err)
 		}
+		fmt.Println(file)
+		fmt.Println(path)
 	},
+}
+
+func processPath(args []string) (string, string, error) {
+	if len(args) > 0 {
+		path := args[0]
+		apkPath := strings.Split(path, "/")
+		fileName := apkPath[len(apkPath)-1]
+		pathToUse := strings.Join(apkPath[:len(apkPath)-1], "/")
+		return fileName, pathToUse, nil
+	}
+	return "", "", fmt.Errorf("please provide a path to an apk or an ipa file")
 }
 
 //Execute will run the command.
