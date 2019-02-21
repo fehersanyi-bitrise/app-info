@@ -36,7 +36,10 @@ var rootCmd = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
-			file, path := logInfo(args)
+			file, path, err := processPath(args)
+			if err != nil {
+				log.Errorf(err.Error())
+			}
 			if strings.Contains(args[0], ".apk") {
 				log.Infof("Retrieving APK Info:")
 				fmt.Println()
@@ -61,8 +64,7 @@ var rootCmd = &cobra.Command{
 				fmt.Print("PATH: ")
 				log.Infof("%s", path)
 				fmt.Println()
-				logInfo(args)
-				//TODO
+
 				appInfo, err := getIpa(file, path)
 				if err != nil {
 					log.Errorf("Error retrieving IPA info %s", err)
@@ -134,14 +136,6 @@ func getIpa(file, path string) (map[string]string, error) {
 		return appInfo, err
 	}
 	return appInfo, nil
-}
-
-func logInfo(args []string) (file, path string) {
-	file, path, err := processPath(args)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return file, path
 }
 
 func getAPK(path string) (map[string]string, error) {
