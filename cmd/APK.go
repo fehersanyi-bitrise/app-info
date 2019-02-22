@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/bitrise-io/go-utils/log"
@@ -10,10 +11,13 @@ import (
 func APK(file, path string, args []string) error {
 	log.Infof("Retrieving APK Info:")
 	printInfo(file, path)
-	appInfo, err := getAPK(args[0])
-	if err != nil {
-		return fmt.Errorf("Failed to retrieve APK info: %s", err)
+	if len(args) > 0 {
+		appInfo, err := getAPK(args[0])
+		if err != nil {
+			return fmt.Errorf("Failed to retrieve APK info: %s", err)
+		}
+		printAppInfo(appInfo, "apk")
+		return nil
 	}
-	printAppInfo(appInfo, "apk")
-	return nil
+	return errors.New("Index out of bounds")
 }

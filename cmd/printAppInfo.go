@@ -10,7 +10,7 @@ func printAppInfo(appInfo map[string]string, appType string) {
 	if appType == "apk" {
 		fmt.Println()
 		log.Printf("Package name: %s", appInfo["packageName"])
-		log.Printf("Version Code: %s", appInfo["cersionCode"])
+		log.Printf("Version Code: %s", appInfo["versionCode"])
 		log.Printf("Version Name: %s", appInfo["versionName"])
 		log.Printf("Path to icon: %s", appInfo["icon"])
 	} else if appType == "ipa" {
