@@ -9,4 +9,4 @@ Version number / Version name
 Build number / Version code
 App icon file path
 
-use of the aapt2 sdk tool
+use of the aapt sdk tool
