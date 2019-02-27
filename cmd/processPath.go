@@ -8,8 +8,8 @@ import (
 func processPath(args []string) (string, string, error) {
 	if len(args) > 0 {
 		path := args[0]
-		apkPath := strings.Split(path, "/")
-		fileName := apkPath[len(apkPath)-1]
+		apkPath := strings.Split(path, "/") // it may refers to an ipa
+		fileName := apkPath[len(apkPath)-1] // filepath.Dir & filepath.Base
 		pathToUse := strings.Join(apkPath[:len(apkPath)-1], "/")
 		return fileName, pathToUse, nil
 	}

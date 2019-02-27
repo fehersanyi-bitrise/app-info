@@ -1,3 +1,5 @@
+// Package cmd ...
+// go uses snake_case file names -> run_root.go
 package cmd
 
 import (
@@ -10,6 +12,7 @@ func runRoot(args []string) error {
 	if err != nil {
 		return err
 	}
+	// validate before parse (processPath)
 	if !strings.Contains(args[0], ".apk") && !strings.Contains(args[0], ".ipa") {
 		return errors.New("Incorrect input")
 	}
