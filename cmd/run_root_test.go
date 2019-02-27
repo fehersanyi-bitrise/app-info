@@ -13,8 +13,6 @@ func Test_run_root(t *testing.T) {
 		{"", "../semmi.apk", true},
 		{"", "../Grability.ipa", false},
 		{"", "../semmi.ipa", true},
-		{"", "", true},
-		{"", "fdsad", true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

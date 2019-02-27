@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/bitrise-io/go-utils/log"
 	"github.com/spf13/cobra"
@@ -16,8 +17,12 @@ var rootCmd = &cobra.Command{
 	Long:  `This app provides information on a given APK or IPA file.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
-			if err := runRoot(args[0]); err != nil {
-				log.Errorf(err.Error())
+			if strings.Contains(args[0], ".apk") || strings.Contains(args[0], ".ipa") {
+				if err := runRoot(args[0]); err != nil {
+					log.Errorf(err.Error())
+				}
+			} else {
+				log.Errorf("Incorrect input must be .apk or .ipa file")
 			}
 		} else {
 			log.Errorf("No app provided")
