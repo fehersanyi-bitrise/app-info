@@ -6,15 +6,15 @@ func Test_run_root(t *testing.T) {
 
 	tests := []struct {
 		name    string
-		args    []string
+		args    string
 		wantErr bool
 	}{
-		{"", []string{"../test.apk"}, false},
-		{"", []string{"../semmi.apk"}, true},
-		{"", []string{"../Grability.ipa"}, false},
-		{"", []string{"../semmi.ipa"}, true},
-		{"", []string{}, true},
-		{"", []string{"fdsad"}, true},
+		{"", "../test.apk", false},
+		{"", "../semmi.apk", true},
+		{"", "../Grability.ipa", false},
+		{"", "../semmi.ipa", true},
+		{"", "", true},
+		{"", "fdsad", true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -16,7 +16,7 @@ var rootCmd = &cobra.Command{
 	Long:  `This app provides information on a given APK or IPA file.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
-			if err := runRoot(args); err != nil {
+			if err := runRoot(args[0]); err != nil {
 				log.Errorf(err.Error())
 			}
 		} else {

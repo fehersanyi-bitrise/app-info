@@ -10,9 +10,9 @@ import (
 )
 
 //IPA ...
-func IPA(args []string) error {
+func IPA(arg string) error {
 	log.Infof("Retrieving IPA Info:")
-	appInfo, err := getIpa(args[0])
+	appInfo, err := getIpa(arg)
 	if err != nil {
 		return fmt.Errorf("Error retrieving IPA info %s", err)
 	}
@@ -38,7 +38,7 @@ func getIpa(arg string) (map[string]string, error) {
 		return appInfo, err
 	}
 
-	infoPlist := path + "/Payload/" + zip[0] + ".app/Info.plist" // filepath.Join
+	infoPlist := filepath.Join(path, "Payload", zip[0]+".app", "Info.plist") // filepath.Join
 	infoXML, err := ioutil.ReadFile(infoPlist)
 	if err != nil {
 		log.Warnf("here")
