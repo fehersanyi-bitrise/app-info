@@ -2,7 +2,7 @@ package cmd
 
 import "testing"
 
-func Test_runRoot(t *testing.T) {
+func Test_run_root(t *testing.T) {
 
 	tests := []struct {
 		name    string
