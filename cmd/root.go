@@ -13,7 +13,7 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "app-info",
-	Short: "A brief description of your application",
+	Short: "A brief description of your application", // do not leave template codes
 	Long:  `This app provides information on a given APK or IPA file.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
