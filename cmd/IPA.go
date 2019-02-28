@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -38,25 +38,25 @@ func getIpa(arg string) (map[string]string, error) {
 	}
 
 	infoPlist := filepath.Join(path, "Payload", zip+".app", "Info.plist")
-	infoXML, err := ioutil.ReadFile(infoPlist)
+
+	infoXML, err := exec.Command("plutil", "-p", infoPlist).Output()
 	if err != nil {
-		log.Warnf("here")
 		return appInfo, err
 	}
 
-	infoArray := strings.Split(string(infoXML), "\n") // use plutil -convert xml1 Payload/Runner.app/Info.plist, to convert to standard plsit format, bit better to use a plist parser package like "howett.net/plist"
-	for i := 0; i < len(infoArray); i++ {
-		if strings.Contains(infoArray[i], "BundleIdentifier") {
-			appInfo["Bundle ID"] = trimXML(infoArray[i+1])
+	infoArray := strings.Split(string(infoXML), "\n")
+	for _, line := range infoArray {
+		if strings.Contains(line, "BundleIdentifier") {
+			appInfo["Bundle ID"] = trimPlist(line)
 		}
-		if strings.Contains(infoArray[i], "BundleShortVersionString") {
-			appInfo["Version Number"] = trimXML(infoArray[i+1])
+		if strings.Contains(line, "BundleShortVersionString") {
+			appInfo["Version Number"] = trimPlist(line)
 		}
-		if strings.Contains(infoArray[i], "CFBundleVersion") {
-			appInfo["Build Number"] = trimXML(infoArray[i+1])
+		if strings.Contains(line, "CFBundleVersion") {
+			appInfo["Build Number"] = trimPlist(line)
 		}
-		if strings.Contains(infoArray[i], "AppIcon-260") {
-			appInfo["App Icon"] = trimXML(infoArray[i])
+		if strings.Contains(line, "AppIcon-260") {
+			appInfo["App Icon"] = trimPlist(line)
 		}
 	}
 
@@ -70,4 +70,9 @@ func getIpa(arg string) (map[string]string, error) {
 		return appInfo, err
 	}
 	return appInfo, err
+}
+
+func trimPlist(s string) string {
+	r := strings.Split(s, " ")
+	return r[len(r)-1]
 }
