@@ -24,9 +24,8 @@ func getIpa(arg string) (map[string]string, error) {
 	appInfo := make(map[string]string)
 	file := filepath.Base(arg)
 	path := filepath.Dir(arg)
-	zip := strings.Split(file, ".") // path may contain multiple dots ./app.xcarchive/info.plist, instead: strings.TrimSuffix(file, filepath.Ext(file))
-	zip[1] = "zip"
-	newFile := strings.Join(zip, ".")
+	zip := strings.TrimSuffix(file, filepath.Ext(file))
+	newFile := zip + ".zip"
 
 	copy := command{Command: "cp", Flag: path + "/" + file, Path: path + "/" + newFile} // command model is a bit strict and over abstraction
 	unzip := command{Command: "unzip", Flag: "-oa", Path: path + "/" + newFile, extraFlag: "-d", outPath: path}
@@ -38,7 +37,7 @@ func getIpa(arg string) (map[string]string, error) {
 		return appInfo, err
 	}
 
-	infoPlist := filepath.Join(path, "Payload", zip[0]+".app", "Info.plist") // filepath.Join
+	infoPlist := filepath.Join(path, "Payload", zip+".app", "Info.plist")
 	infoXML, err := ioutil.ReadFile(infoPlist)
 	if err != nil {
 		log.Warnf("here")
