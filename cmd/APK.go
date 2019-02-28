@@ -10,9 +10,8 @@ import (
 )
 
 //APK ...
-func APK(file, path, arg string) error {
+func APK(arg string) error {
 	log.Infof("Retrieving APK Info:")
-	// file and path is redundant if you work with args as well
 	if arg != "" {
 		appInfo, err := getAPK(arg)
 		if err != nil {
