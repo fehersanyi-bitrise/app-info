@@ -2,9 +2,18 @@ package cmd
 
 import (
 	"fmt"
+	"os/exec"
 
 	"github.com/bitrise-io/go-utils/log"
 )
+
+func do(name string, args ...string) error {
+	_, err := exec.Command(name, args...).Output()
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func printAppInfo(appInfo map[string]string, appType string) {
 	if appType == "apk" {
