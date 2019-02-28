@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -18,9 +17,6 @@ var rootCmd = &cobra.Command{
 	Short: "provides some info on artifacts",
 	Long:  `This app provides information on a given APK or IPA file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := checkDependency(); err != nil {
-			log.Errorf("%s", err)
-		}
 		if len(args) > 0 {
 			if strings.Contains(args[0], ".apk") || strings.Contains(args[0], ".ipa") {
 				if err := RUNApp(args[0]); err != nil {
@@ -47,27 +43,6 @@ func RUNApp(arg string) error {
 			return err
 		}
 	}
-	return nil
-}
-
-func checkDependency() error {
-	log.Infof("Checking dependencies")
-	d, err := exec.Command("mdfind", "-name", "aapt").Output()
-	if err != nil {
-		return err
-	}
-	if string(d) != "" {
-		log.Successf("aapt packege found in PATH")
-		fmt.Println()
-		return nil
-	}
-	log.Warnf("aapt not installed in PATH")
-	log.Printf("installing android tools")
-	_, err = exec.Command("brew", "cask", "install", "android-sdk").Output()
-	if err != nil {
-		return err
-	}
-	log.Successf("android tools installed successfully")
 	return nil
 }
 

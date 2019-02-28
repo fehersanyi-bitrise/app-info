@@ -11,6 +11,9 @@ import (
 
 //APK ...
 func APK(arg string) error {
+	if err := checkDependency(); err != nil {
+		log.Errorf("%s", err)
+	}
 	log.Infof("Retrieving APK Info:")
 	if arg != "" {
 		appInfo, err := getAPK(arg)
@@ -40,4 +43,25 @@ func getAPK(path string) (map[string]string, error) {
 		}
 	}
 	return appInfo, nil
+}
+
+func checkDependency() error {
+	log.Infof("Checking dependencies")
+	d, err := exec.Command("mdfind", "-name", "aapt").Output()
+	if err != nil {
+		return err
+	}
+	if string(d) != "" {
+		log.Successf("aapt packege found in PATH")
+		fmt.Println()
+		return nil
+	}
+	log.Warnf("aapt not installed in PATH")
+	log.Printf("installing android tools")
+	_, err = exec.Command("brew", "cask", "install", "android-sdk").Output()
+	if err != nil {
+		return err
+	}
+	log.Successf("android tools installed successfully")
+	return nil
 }
